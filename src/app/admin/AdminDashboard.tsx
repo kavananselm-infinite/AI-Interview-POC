@@ -5970,7 +5970,7 @@ export default function AdminDashboard() {
                                   const score = getScore(row);
                                   return (
                                     <Badge className={`border-0 font-extrabold text-xs px-3 py-1 ${
-                                      score >= 40
+                                      (score ?? 0)>= 40
                                         ? "bg-emerald-100 dark:bg-emerald-950/35 text-emerald-800 dark:text-emerald-300"
                                         : "bg-amber-100 dark:bg-amber-955/35 text-amber-855 dark:text-amber-300"
                                     }`}>
