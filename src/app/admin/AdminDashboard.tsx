@@ -5967,7 +5967,7 @@ export default function AdminDashboard() {
                                   JD Match
                                 </span>
                                 {(() => {
-                                  const score = getScore(row) ?? 0;
+                                  const score = getScore(row);
                                   return (
                                     <Badge className={`border-0 font-extrabold text-xs px-3 py-1 ${
                                       score >= 40
@@ -6061,7 +6061,7 @@ export default function AdminDashboard() {
                                   size="sm"
                                   variant="outline"
                                   disabled={actionLoading === row.id}
-                                  onClick={() => handleOverrideSuitability(row.id, getSuitability(row) ?? "unsuitable")}
+                                  onClick={() => handleOverrideSuitability(row.id, getSuitability(row))}
                                   className="h-8 text-[11px] font-bold border-indigo-100 text-indigo-600 hover:bg-indigo-50 rounded-xl"
                                 >
                                   {getSuitability(row) === "suitable" ? "Mark Unsuitable" : "Mark Suitable"}
