@@ -5970,11 +5970,11 @@ export default function AdminDashboard() {
                                   const score = getScore(row);
                                   return (
                                     <Badge className={`border-0 font-extrabold text-xs px-3 py-1 ${
-                                      (score ?? 0)>= 40
+                                      score !== null && score >= 40
                                         ? "bg-emerald-100 dark:bg-emerald-950/35 text-emerald-800 dark:text-emerald-300"
                                         : "bg-amber-100 dark:bg-amber-955/35 text-amber-855 dark:text-amber-300"
                                     }`}>
-                                      {score}%
+                                      {score === null ? "—" : `${score}%`}
                                     </Badge>
                                   );
                                 })()}
@@ -6061,7 +6061,7 @@ export default function AdminDashboard() {
                                   size="sm"
                                   variant="outline"
                                   disabled={actionLoading === row.id}
-                                  onClick={() => handleOverrideSuitability(row.id, getSuitability(row))}
+                                  onClick={() => handleOverrideSuitability(row.id, getSuitability(row) ?? "unsuitable")}
                                   className="h-8 text-[11px] font-bold border-indigo-100 text-indigo-600 hover:bg-indigo-50 rounded-xl"
                                 >
                                   {getSuitability(row) === "suitable" ? "Mark Unsuitable" : "Mark Suitable"}

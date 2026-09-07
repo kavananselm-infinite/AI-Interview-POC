@@ -2,6 +2,7 @@ import { join } from "path";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import crypto from "crypto";
 import { supabase } from "@/lib/db";
+import type { EmployeeProctoringState } from "@/lib/employee-proctoring";
 
 export interface LocalTest {
   id: string;
@@ -20,6 +21,12 @@ export interface LocalTest {
   created_at: string;
   topic_title?: string;
   subject_title?: string;
+  session_recording_url?: string | null;
+  proctoring?: EmployeeProctoringState | null;
+  score_correct?: number | null;
+  score_total?: number | null;
+  score_percent?: number | null;
+  ai_analysis?: unknown;
 }
 
 export interface LocalTestQuestion {
@@ -65,6 +72,10 @@ export class LocalTestsDb {
     return LocalTestsDb.instance;
   }
 
+  static scoreFromAttempts(attempts: LocalTestAttempt[], _test: LocalTest): number {
+    return attempts.reduce((total, attempt) => total + (attempt.is_correct ? 1 : 0), 0);
+  }
+
   private async resolveEmployeeUuid(idOrCode: string): Promise<string> {
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrCode);
     if (isUuid) return idOrCode;
@@ -102,7 +113,13 @@ export class LocalTestsDb {
       started_at: row.started_at,
       completed_at: row.completed_at,
       in_progress: inProgress,
-      created_at: row.created_at
+      created_at: row.created_at,
+      session_recording_url: row.session_recording_url ?? null,
+      proctoring: row.proctoring ?? null,
+      score_correct: row.score_correct ?? null,
+      score_total: row.score_total ?? null,
+      score_percent: row.score_percent ?? null,
+      ai_analysis: row.ai_analysis ?? null,
     };
   }
 
@@ -274,6 +291,12 @@ export class LocalTestsDb {
       if (updates.started_at !== undefined) payload.started_at = updates.started_at;
       if (updates.completed_at !== undefined) payload.completed_at = updates.completed_at;
       if (updates.in_progress !== undefined) payload.in_progress = updates.in_progress ? JSON.stringify(updates.in_progress) : null;
+      if (updates.session_recording_url !== undefined) payload.session_recording_url = updates.session_recording_url;
+      if (updates.proctoring !== undefined) payload.proctoring = updates.proctoring;
+      if (updates.score_correct !== undefined) payload.score_correct = updates.score_correct;
+      if (updates.score_total !== undefined) payload.score_total = updates.score_total;
+      if (updates.score_percent !== undefined) payload.score_percent = updates.score_percent;
+      if (updates.ai_analysis !== undefined) payload.ai_analysis = updates.ai_analysis;
 
       const { data, error } = await supabase
         .from("tests")

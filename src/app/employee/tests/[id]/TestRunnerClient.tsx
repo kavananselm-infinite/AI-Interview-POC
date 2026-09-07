@@ -127,7 +127,6 @@ export default function TestRunnerClient({ testId }: { testId: string }) {
   const [timeLeft,    setTimeLeft]    = useState<number | null>(null);
   const [msg,         setMsg]         = useState<string | null>(null);
   const [submitted,   setSubmitted]   = useState<{ correct: number; total: number; accuracy_pct: number; ai_analysis?: { summary?: string; strengths?: string[]; weaknesses?: string[]; next_steps?: string[]; continue_message?: string } | string; topic_title: string } | null>(null);
-  const [videoUploadState, setVideoUploadState] = useState<VideoUploadState>("pending");
 
   const savedRef     = useRef(false);
   const timerRef     = useRef<ReturnType<typeof setInterval> | null>(null);
